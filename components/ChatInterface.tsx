@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import type { HistoricalFigure } from "@/data/historical-figures"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Send, ArrowLeft } from "lucide-react"
+import { Send, ArrowLeft, RefreshCw } from "lucide-react"
 
 interface Message {
   id: number
@@ -80,6 +80,16 @@ export default function ChatInterface() {
     }, 1000)
   }
 
+  // 最初からやり直す関数
+  const handleReset = () => {
+    // ローカルストレージをクリア
+    localStorage.removeItem("likedFigures")
+    localStorage.removeItem("matchedFigure")
+
+    // 強制的にページをリロード
+    window.location.href = "/"
+  }
+
   if (!matchedFigure) {
     return <div className="flex items-center justify-center h-full">Loading...</div>
   }
@@ -91,12 +101,12 @@ export default function ChatInterface() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/match")}
           className="text-white hover:bg-amber-800 mr-2"
         >
           <ArrowLeft size={24} />
         </Button>
-        <div className="flex items-center">
+        <div className="flex items-center flex-1">
           <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
             <img
               src={matchedFigure.image || "/placeholder.svg"}
@@ -109,6 +119,15 @@ export default function ChatInterface() {
             <p className="text-xs opacity-80">オンライン</p>
           </div>
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleReset}
+          className="text-white hover:bg-amber-800"
+          title="最初からやり直す"
+        >
+          <RefreshCw size={20} />
+        </Button>
       </div>
 
       {/* Messages */}

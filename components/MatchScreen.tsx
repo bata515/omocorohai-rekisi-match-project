@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import type { HistoricalFigure } from "@/data/historical-figures"
 import { Button } from "@/components/ui/button"
-import { MessageCircle } from "lucide-react"
+import { MessageCircle, RefreshCw } from "lucide-react"
 import confetti from "canvas-confetti"
 
 export default function MatchScreen() {
@@ -35,6 +35,16 @@ export default function MatchScreen() {
     }
   }, [])
 
+  // 最初からやり直す関数
+  const handleReset = () => {
+    // ローカルストレージをクリア
+    localStorage.removeItem("likedFigures")
+    localStorage.removeItem("matchedFigure")
+
+    // 強制的にページをリロード
+    window.location.href = "/"
+  }
+
   if (!matchedFigure) {
     return <div className="flex items-center justify-center h-full">Loading...</div>
   }
@@ -59,13 +69,24 @@ export default function MatchScreen() {
         </div>
       </div>
 
-      <Button
-        onClick={() => router.push("/chat")}
-        className="bg-amber-700 hover:bg-amber-800 text-white flex items-center gap-2"
-      >
-        <MessageCircle size={20} />
-        会話を始める
-      </Button>
+      <div className="flex gap-4">
+        <Button
+          onClick={() => router.push("/chat")}
+          className="bg-amber-700 hover:bg-amber-800 text-white flex items-center gap-2"
+        >
+          <MessageCircle size={20} />
+          会話を始める
+        </Button>
+
+        <Button
+          onClick={handleReset}
+          variant="outline"
+          className="border-amber-700 text-amber-700 hover:bg-amber-100 flex items-center gap-2"
+        >
+          <RefreshCw size={20} />
+          最初からやり直す
+        </Button>
+      </div>
     </div>
   )
 }

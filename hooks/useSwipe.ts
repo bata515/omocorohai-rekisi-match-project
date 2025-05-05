@@ -92,6 +92,16 @@ export function useSwipe(figures: HistoricalFigure[]) {
     handleSwipe(dir)
   }
 
+  // リセット機能を追加
+  const resetSwipe = () => {
+    setCurrentIndex(0)
+    setDirection(null)
+    setLiked([])
+    setIsDragging(false)
+    setSwipeDistance(0)
+    setIsAnimating(false)
+  }
+
   return {
     currentFigure,
     direction,
@@ -103,5 +113,6 @@ export function useSwipe(figures: HistoricalFigure[]) {
     handleTouchMove,
     handleTouchEnd,
     handleButtonClick,
+    resetSwipe,
   }
 }

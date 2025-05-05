@@ -14,7 +14,7 @@ export default function Home() {
           <CardDeck figures={historicalFigures} />
         </div>
 
-        <footer className="text-center py-2 text-amber-800 text-sm">© 2023 縁結び - 歴史マッチングアプリ</footer>
+        <footer className="text-center py-2 text-amber-800 text-sm">© 2025 縁結び - 歴史マッチングアプリ</footer>
       </div>
     </main>
   )

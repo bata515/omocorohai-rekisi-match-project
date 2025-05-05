@@ -5,6 +5,7 @@ import SwipeCard from "./SwipeCard"
 import { useSwipe } from "@/hooks/useSwipe"
 import { Heart, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useEffect } from "react"
 
 interface CardDeckProps {
   figures: HistoricalFigure[]
@@ -23,26 +24,47 @@ export default function CardDeck({ figures }: CardDeckProps) {
     handleTouchMove,
     handleTouchEnd,
     handleButtonClick,
+    resetSwipe,
   } = useSwipe(figures)
+
+  // 最初からやり直す関数
+  const handleReset = () => {
+    // ローカルストレージをクリア
+    localStorage.removeItem("likedFigures")
+    localStorage.removeItem("matchedFigure")
+
+    // スワイプ状態をリセット
+    resetSwipe()
+
+    // 強制的にページをリロード
+    window.location.href = "/"
+  }
+
+  useEffect(() => {
+    if (isFinished) {
+      // Store liked figures in localStorage
+      if (liked.length > 0) {
+        localStorage.setItem("likedFigures", JSON.stringify(liked))
+        router.push("/match")
+      }
+    }
+  }, [isFinished, liked, router])
 
   // When all cards are swiped, navigate to match page
   if (isFinished) {
-    // Store liked figures in localStorage
-    if (liked.length > 0) {
-      localStorage.setItem("likedFigures", JSON.stringify(liked))
-      router.push("/match")
-    } else {
+    if (liked.length <= 0) {
       // If no figures were liked, show a message
       return (
         <div className="flex flex-col items-center justify-center h-full p-4 text-center">
           <h2 className="text-2xl font-bold text-amber-900 mb-4">縁が結ばれませんでした...</h2>
           <p className="text-gray-700 mb-6">もう一度お試しください</p>
-          <Button onClick={() => router.push("/")} className="bg-amber-700 hover:bg-amber-800 text-white">
+          <Button onClick={handleReset} className="bg-amber-700 hover:bg-amber-800 text-white">
             最初からやり直す
           </Button>
         </div>
       )
     }
+    return <div className="flex items-center justify-center h-full">マッチング中...</div>
   }
 
   return (
